@@ -8,6 +8,4 @@ Also, modeling unit of measure and its associated statistical metadata are impor
 This content-oriented guideline for Units of measures is destined to statistical data modelers working with multidimensional data, primarily in SDMX – but with a scope that can go beyond (e.g. datawarehousing in general). The patterns proposed in this paper are anchored in existing and well-established international standards in the fields of science and engineering.
 
 # Public review
-As we move along the markdown format will take precedence. The pdf document will be regenerated frequently to reflect changes applied to the markdown text.
-
 To offer comments, improvements to the document please open issues (via the left hand panel) or contribute to the discussions already opened.
