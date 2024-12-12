@@ -1,3 +1,7 @@
+# Feedback deadline
+
+The public review has been extended until the end of January 2025.
+
 # Introduction
 
 The importance of unit of measure in statistical data modeling is to assure consistency and accuracy of the data. Measurement units are used to quantify data and to offer an immediate mechanism to assess the comparability and computation scope of the data.
