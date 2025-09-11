@@ -1,57 +1,72 @@
 # Guidelines for modelling Units of measure in SDMX
 
-Version 1.0.draft\
+Version 1.1.draft\
 SWG - Unit of measure task group\
-October 2024
+September 2025
 
 
 
 # 1. Introduction
 
-The importance of unit of measure in statistical data modeling is to assure consistency and accuracy of the data. Measurement units are used to quantify data and to offer an immediate mechanism to assess the comparability and computation scope of the data.
+The role of units of measure in statistical data modeling is critical for ensuring consistency, accuracy, and interpretability. Measurement units provide a standardized way to quantify data, enabling immediate assessment of comparability and defining the scope for computations.
 
-When comparing statistical data indicators, accurate and consistent unit of measure conversions are crucial for data integrity and meaningful analysis. This is why guidelines for Unit of Measure metadata modeling are essential. These guidelines provide a framework for organising and standardising the way units of measure are represented and managed in data models.
+Accurate and consistent unit conversions are essential for maintaining data integrity and enabling meaningful analysis when comparing statistical indicators. This underscores the importance of guidelines for Unit of Measure (UoM) metadata modeling. These guidelines establish a framework for organizing and standardizing how units of measure are represented and managed within SDMX data models.
 
-Also, modeling unit of measure and its associated statistical metadata are important for the exchange of data and metadata between organisations. As part of the Statistical and Metadata Exchange Standard (SDMX) consortium, tailored guidelines are developed that recommend harmonised cross-domain concepts and terminology to improve the efficiency of data exchange.
+As part of the Statistical Data and Metadata Exchange (SDMX) consortium, tailored guidelines have been developed to promote harmonized cross-domain concepts and terminology, improving the efficiency of data exchange. The guidelines for modeling units of measure, along with the planned work on Unit of measure associated code-lists fits into this series of harmonisation efforts.
 
-This content-oriented guideline for Units of measures is destined to statistical data modelers working with multidimensional data, primarily in SDMX – but with a scope that can go beyond (e.g. datawarehousing in general). The patterns proposed in this paper are anchored in existing and well-established international standards in the fields of science and engineering.
+These content-oriented guidelines are designed for statistical data modelers working with multidimensional data, primarily in SDMX, but they also extend to data warehousing applications in general. The patterns proposed are rooted in well-established international standards in science and engineering.
 
 Beyond the well established unit of measure standards, there are two novelties addressed in this guideline: on one hand it describes dimensions and their corresponding _units of measures_ that are typical to economics and social statistics, and on the other hand it deals with data sturctured into multi-dimensional cubes.
 
-The  measurements particular to the fields of economics and social sciences are _monetary value_ and numerosity of various sets (e.g. population, entreprises). The main aim is to keep the spirit of the existing standards while integrating the new dimensions, that is facilitate comparability of the data across a wide spectrum of data sources and help identify the computation scopes in which data can appear.
+The  measurements particular to the fields of economics and social sciences are _monetary value_ and numerosity of various sets (e.g. population, entreprises). The goal is to preserve the essence of the existing standards while integrating the new dimensions, that is facilitate comparability of the data across a wide spectrum of data sources and clarify the computational contexts in which the data can be used.
 
 The second novel element of the guideline is introducing the perspective of a multi-dimensional cube, living in a data-warehouse of multiple, interrelated cubes, and in the ultimate idealized scenario as part of a universe of connected data warehouses. The main standards that traditionally govern the rules for units of measures have a simple model to represent measured quantities $\small Measure = \{x\} [unit \: of \: measure]$. In this guideline we discuss cases when both the _measure_ quantity and the _unit of measure_ emerges as a combination of dimensions and attributes (jointly referred to as components). In practice, the difficulty is indeed in delineating components that are part of the measure and components that describe the units of measure, and building a consistent set of such components that can be recomposed systematically into the compact representation of the existing standards. The guideline presents cases and provides recommendations for various concepts that impact the measurement or the allocation of the units of measure (e.g. unit multipliers, transformations and adjustments, scaling facts and deflator types) - including code-lists or code-list templates.
 
-By following these guidelines, organisations will be better equipped to ensure data consistency, improve interoperability, and enhance the overall quality of their data.
+By adhering to these guidelines, organisations can achieve greater data consistency, improve interoperability, and enhance the overall quality of their data.
+
 
 
 # 2. Alignment to existing international standards for Units of Measure  
 
-There are recognized standards for representation for units of measure. The International System of Units (SI), International System of Quantities (ISQ), and Unified Code for Units of Measure (UCUM) are the most frequently used and acknowledged standards. We align the Unit of Measure guidelines with the current standards as we create cross-domain code-sets to represent units of measurement for the statistical community.
+## 2.1 Reference frameworks
 
-> **Système International (SI) for quantities and units (ISO 80000)**
+The guidelines put forward in this document don't operate in a vacuum. Instead, they build directly on well-established standards, classifications, and ontologies for units of measure. Any deviations from these existing frameworks are few and will be thoroughly explained in later sections.
 
-> ISO 80000 is an international standard describing the International System of Quantities (ISQ) and the International System of Units (SI). ISO 80000 is a comprehensive and updated series of standards covering various fields of science and technology. ISO 80000 also incorporates some amendments that were made to ISO 31 and ISO 1000 in the past. It also defines the symbols and rules for writing quantities and units in a consistent and coherent way. It is developed and published jointly by the International Organization for Standardization (ISO) and the International Electrotechnical Commission (IEC).
+At the core of these frameworks is the **International System of Units (SI)**, maintained by the Bureau International des Poids et Mesures (BIPM). Widely adopted and promoted by metrology institutes worldwide, the SI system defines the fundamental concepts of quantity and unit. It establishes seven base quantities and their units, which serve as the building blocks for all other units through simple multiplication and division.
 
-> **The Unified Code for Units of Measure (UCUM)** 
+Beyond the seven core dimensions, the SI system also accounts for quantities that represent "number or entities". These are assigned a unit of 1 - a convention that will be discussed in section 2.5. While the SI system is generally a closed system — with only a handful of admitted exceptions like the liter or tonne — it has a strong ambition to create global convergence and standardization. This is achieved by not only describing possible units, but also by normatively defining the base units, which helps reduce errors associated with unit conversions, necessary when competing units are in use.
 
-> The Unified Code for Units of Measure (UCUM) is a code system that aims to include all units of measure that are currently used in various fields of science and engineering. It is designed to enable clear and accurate electronic communication of quantities and their units, especially in terms of driving interoperability. It can help avoid confusion between different systems of measurement, such as metric and imperial, or different conventions for writing units, such as using dots or slashes to indicate different parts of a division. UCUM has been adopted by many international organizations and standards, such as IEEE, DICOM, LOINC, and HL7, and is also part of the ISO 11240:2012 standard.
+Despite its benefits, the SI system's rigid, prescriptive nature has led to the development of other, more flexible unit of measure standards. These guidelines consider two in particular: **ISO:80000-1** and the **Unified Code for Units of Measure (UCUM)**. Both of these standards are largely aligned with the SI but differ by acknowledging the arbitrary nature of base unit choices and accepting a wider range of commonly used units.
 
-## 2.1. Using dimensional analysis 
+While these standards offer an abstract view of dimensional systems, they don't provide sufficient guidance for measurements in fields like economics and social sciences. To fill this gap, this document introduces a base quantity type for "monetary value", and also proposes a different approach for measuring the "numerosity" of finite sets ("number of entities" issue), diverging from the methods of the other standards.   
 
-In engineering and science - as a companion of the mentioned standards - dimensional analysis is systematically used to determine units of measures of measured and derived quantities. Dimensional analysis comprises of the analysis of measured quantities to identify their base dimensions (such as length, mass, and time) and to associate a unit of measure (such as miles or kilometres) with the quantity such that the measured quantity is expressed as multiples of the unit of measure. Additionally, dimensional analysis sets out the rules to working with measured quantities in calculations and comparisons.
+
+## 2.2 Transposing Unit of Measure standards to a digital world
+
+The digital era has seen numerous disconnected efforts to create unit of measure (UoM) recommendations. In their simplest forms, these have been domain-specific classifications and code-lists, such as those from UN/CEFACT[^UNC] for the trade and electronic business community. More complete digital artifacts, like ontologies, have also emerged, some directly related to the frameworks in Section 2.1, while others have grown within communities like NASA and UN/CEFACT. Keil and Schindler provide a comprehensive comparison of these ontologies in their *Semantic Web Journal* paper[^KS]. The SI system itself has also established its own digital framework at [https://si-digital-framework.org/SI?lang=en](https://si-digital-framework.org/SI?lang=en).
+
+While this document does not provide a definitive list of units of measure, it outlines best practices and patterns for consistent identification and application, particularly in domains outside the scope of the referenced frameworks. The SDMX Statistical Working Group's Unit of Measure Task Group plans to design code-lists for various classes of units, but it has no intention of developing new ontologies. Instead, its design efforts will focus on granularly annotating and referencing corresponding concepts in established ontologies and in the SI reference point, ensuring alignment and interoperability.
+
+The **DRUM** (Digital Representation of Units of Measurement) task group, under the auspices of the Committee on Data (CODATA) of the International Science Council, has the core mandate to promote the FAIR principles (Findable, Accessible, Interoperable, and Reusable) for scientific data by ensuring units of measurement are not "second-class citizens". Its primary goals are to work with international scientific unions to raise awareness and provide guidance on implementing digital unit representations. This includes developing recommendations for machine-actionable encoding of units, creating guidelines for annotating data, and defining best practices.
+
+[^UNC]:	UN/CEFACT code-list recommendations, Rec.20, Codes for Units of Measure in International Trade [https://unece.org/code-list-recommendations] (https://unece.org/code-list-recommendations)
+[^KS]: Jan Martin Keil, Sirko Schindler, Comparison and Evaluation of Ontologies for Units of Measurement, in Semantic Web Journal 2018, [https://www.semantic-web-journal.net] (https://www.semantic-web-journal.net/content/comparison-and-evaluation-ontologies-units-measurement-1).
+
+## 2.3 Using dimensional analysis 
+
+In engineering and science - as a companion of the mentioned standards - dimensional analysis is systematically used to determine units of measures of estimated and derived quantities. Dimensional analysis comprises of the analysis of quantities to identify their dimensions (such as length, mass, and time) and to associate a unit of measure (such as miles or kilometres) with the quantity such that the quantity is expressed as multiples of the unit of measure. Additionally, dimensional analysis sets out the rules to working with quantities in calculations and comparisons.
 
 Dimensional analysis is a convenient tool to build a rigourous system of measurement, and serve as a validation tool for calculations and comparisons. The main rules of dimensional analysis/calculus can be summarised as follows:
 - only measured quantities sharing the same units of measure can be directly compared, or added to (subtracted from) each other
 - measured quantities sharing the same base dimension are said to be _commensurable_; their roles as measured quantity vs. unit of measure are interchangeable (e.g. $\small {in=2.54 cm} \Rightarrow {cm=1/2.54 in}$) 
-- multiplication and division is possible between quantities of different units of measure, with the resulting quantity carrying the unit of measure that results from the same operations carried on the units of measure (using the conventional rules of exponentiation: ${m/s \over s} = \small m/s^{2}$)
-- derivation/differentiation of a quantity over another corresponds to a division, whereas integration corresponds to a multiplication in the units of measure 
+- multiplication and division is possible between quantities with different units of measure, with the resulting quantity carrying the unit of measure that results from the same operations carried on the units of measure (using the conventional rules of exponentiation: ${m/s \over s} = \small m/s^{2}$)
+- derivation/differentiation of a quantity over another corresponds to a division, whereas integration corresponds to a multiplication in the units of measure
 
-Just like in engineering and science, statistical databases present measured quantities (and estimates and derivations involving those measured quantities), so it is appealing to consider the usage of dimensional analysis to improve the analytical utility of the presented data. The analytical utility would come from the usual properties of dimensional analysis: if the data producer associates units of measure in line with dimensional analysis rules, then they can convey useful immediate information of the scopes in which the data can be used in, of limits of comparability, and can drive deeper insights when using complex transformations of the data. The systematic representation of units of measure in data models can avoid clumsy reference metadata and methodology lookups.
+Just like in engineering and science, statistical databases present quantities (measurements, estimates and derivations), so it is appealing to consider the usage of dimensional analysis to improve the analytical utility of the presented data. The analytical utility would come from the usual properties of dimensional analysis: if the data producer associates units of measure in line with dimensional analysis rules, then they can convey useful immediate information of the scopes in which the data can be used in, of limits of comparability, and can drive deeper insights when using complex transformations of the data. The systematic representation of units of measure in data models can avoid clumsy reference metadata and methodology lookups, and avoids conversion and interpretation errors.
 
 There are two notable points where the existing standards allow for some interpretational flexibility: treating ratios of commensurable quantities (i.e. quantities that share the same base dimension) and handling the numerosity of sets. We will discuss these two cases in the following sections.
 
-## 2.2. Deriving units of measure with dimensional analysis  
+## 2.4 Deriving units of measure with dimensional analysis  
 
 The examples below demonstrate how dimensional analysis works, and discusses two distinct scenarios of data derivation:  ratios of commensurable quantities and ratios of non-commensurable quantities. 
 
@@ -78,7 +93,7 @@ $$\small \text{Debt to reserves ratio} = {\text{gross debt} \over \text{reserves
 
 In this scenario the value 1.25 is stored for the measure 'Debt to reserves ratio' and it is unitless in the sense that the original units cancel out if using the familiar aritmethics $\small \mathrm{USD}/\mathrm{USD} = \mathrm{USD}^{0} \stackrel{def}{=} 1$. The _def_ qualifier highlights that it is by convention that we consider such quantities relieved from the burden of being tied to their original dimension and are treated as pure, dimensionless numbers.
 
-The struggles and workarounds statistical producers take to fill the void created by the ‘disappearing’ unit of measure in the ‘unitless number’ approach is telling. Often the component for the unit of measure in the database is filled by 'meta' instructions about the unit of measure, as some sort of warning: _ratio_, _number_, _pure number_, _unitless number_ are the most frequent, or to escape the problem the value is multiplied by 100 and presented as _percentage_. The problem with these practices is that they are not units of measure, but rather hints for the user of the data to investigate more thoroughly the indicator definition or look-up methodological metadata to have a sense of the context in which the number can be used. In a way, using special code-list items like __X: 'Not allocated'_ would be more appropriate than the meta-instructions.
+The struggles and workarounds statistical producers take to fill the void created by the ‘disappearing’ unit of measure in the ‘unitless number’ approach is telling. Often the component for the unit of measure in the database is filled by 'meta' instructions about the unit of measure, as some sort of warning: _ratio_, _number_, _pure number_, _unitless number_ are the most frequent, or to escape the problem the value is multiplied by 100 and presented as _percentage_. The problem with these practices is that they are not units of measure, but rather hints for the user of the data to investigate more thoroughly the indicator definition or look-up methodological metadata to have a sense of the context in which the number can be used. In SDMX, using special code-list items like __X: 'Not allocated'_ would be more appropriate than the meta-instructions.
 
 ### 'Change of unit-of-measure' approach:
 
@@ -100,14 +115,14 @@ The first variant is when data producers compute an indicator of non-commensurab
 
 For example, the measure 'GDP to population ratio' which should be associated with 'USD/person' is simply presented as with the measure 'GDP' and a clumsy unit of measure resembling 'USD/person'. This variation is clearly inconsistent and could lead to surprising results if taken literally and applied in computations that adhere to the rules of dimensional analysis. The appeal to use this representation is there because in a large database one would like to be able to align/pivot all variations (and derivations of GDP). Nonetheless it would be a better solution to introduce a dedicated dimension which captures the 'projection' basis which in this case would be 'population', in other cases could be 'households' or 'hours worked'. The measured quantity would emerge as a combination of two dimensions: GDP in the measure dimension and the projection base in the other dimension, and the correct unit of measure would apply to each combination. This would avoid tinkering with the unit of measure itself.
 
-> The careful reader might have already noticed that GDP is assumed to carry a wrong unit of measure (like in most statistical databases). This is because GDP being a measure of flow, i.e. value added generated over a period of time, should have units of measure that convey this e.g. USD/_year_ or USD/_quarter_, rather than _USD_ alone. The reason why - by convention -  the unit of time is not marked in the unit of measure is that it is assumed to correspond to the frequency of the time-series in which the GDP figures are presented[^3], or it is the well known frequency of the analysis. However this convention can lead to confusions. For example, annualised figures of GDP are sometimes used in a quarterly context. Typically, a debt-to-GDP ratio is calculated with annualised GDP even when working with quarterly data of debt and GDP, and users unaware of the convention would not know if the annual debt-to-GDP ratio is immediately comparable to the one calculated in a quarterly context (hint: it is). Such a mental gymnastics could be spared if the unit of measure for debt-to-GDP would be _years_ or _quarters_ as it follows from dimensional analysis. 
+> The careful reader might have already noticed that GDP (expressed in USD) carries a wrong unit of measure here (just like in most statistical databases). This is because GDP being a measure of flow, i.e. value added generated over a period of time, should have units of measure that convey this e.g. USD/_year_ or USD/_quarter_, rather than USD alone. The reason why - by convention -  the unit of time is not marked in the unit of measure is that it is assumed to correspond to the frequency of the time-series in which the GDP figures are presented[^3], or it is the well known frequency of the analysis. However this convention can lead to confusions. For example, annualised figures of GDP are sometimes used in a quarterly context. Typically, a debt-to-GDP ratio is calculated with annualised GDP even when working with quarterly data of debt and GDP, and users unaware of the convention would not know if the annual debt-to-GDP ratio is immediately comparable to the one calculated in a quarterly context (hint: it is). Such a mental gymnastics could be spared if the unit of measure for debt-to-GDP ratio would be _year_ or _quarter_ as it follows from dimensional analysis. 
 
-The other compelling case to deviate from a consistent use of units of measure is opposite of the previous one. In this case the starting point is an indicator computed from commensurable quantities and the 'unitless number' representation for the measure, based often on the argument that this is the established convention, this is how users recognise the indicator. Take for example the 'unemployment rate' (literally it is the unemployed to labour force ratio) and in a consistent unit of measure allocation this is presented as _percentage_, however to give context and avoid misinterpretation we recommend associating it with _percentage of labour force_. This approach, while it seemingly kills two birds with one stone (familiar measure, informative unit of measure) can still cause problem when used in further computation and dimensional analysis is applied literally.
+The other compelling case to deviate from a consistent use of units of measure is the opposite of the previous one. In this case the starting point is an indicator computed from commensurable quantities and the 'unitless number' representation for the measure, based often on the argument that this is the established convention, this is how users recognise the indicator. Take for example the 'unemployment rate' (literally it is the unemployed to labour force ratio) and in a consistent unit of measure allocation this is presented as _percentage_, however to give context and avoid misinterpretation it can be associated with _percentage of labour force_. This approach, while it seemingly kills two birds with one stone (familiar measure, informative unit of measure) can still cause problem when used in further computation and dimensional analysis is applied literally.
 
 ### Recommendations
 
-1. Use consistent representations whenever possible
-2. When calculating indicators of commensurable quantities, prefer the 'change of unit-of-measure' representation
+1. When calculating indicators of commensurable quantities, prefer the 'change of unit-of-measure' representation
+2. Use consistent representations whenever possible
 3. When convention dictates the use of inconsistent representations provide ample, easily accessible metadata and clues for the user to be able to get back in the comfort of dimensional analysis for further derivations, or be able to remain in the 'quasi-consistent' world of the established convention. 
 
 [^1]: Indeed the guideline's perspective here is quite unusual and very utilitarian. In a classical approach we know in advance what we measure and the unit of measure follows. Here the numerical value emerges first and we architect the data model around it, and ponder the utility of two distinct combinations of 'measure - unit of measure pairs' that will go with the number, and set scopes of usage for it.
@@ -116,7 +131,9 @@ The other compelling case to deviate from a consistent use of units of measure i
 
 [^3]: To bring a science analogy: this is as if the distance covered by a moving object would be plotted every second. Each individual measurement is a distance (in meters), but it also corresponds to the velocity of the object at that instant (in meters per second) as our measurement frequency exactly corresponds to the unit of measure of time.
 
-## 2.3. Measuring the numerosity of sets
+## 2.5 Measuring the numerosity of sets
+
+[TODO -  David Flater paper, back reference to the generic approach of the standards and some ontology maintainers, update the main argument and explain why it is important to NOT follow the unitless numbers approach - switches off the dimensional analysis + in a datawarehouse it can render the large majority of the data 'unitless' or unit 1.]
 
 In the example above on dimensional analysis we have already touched upon the issue of measuring the size (numerosity) of a population (set of distinct elements), handling it in an intuitive way. This section extends the analysis to similar scenarios and generalises recommendations to measurement of the numerosity of various sets and the association of units of measures with such measurements.
 
@@ -125,7 +142,7 @@ As usual our starting point is to look for analogies in the the SI system for me
 The defintion of the _mole_ in SI system provides a good entry for measuring the numerosity of sets, or quantify the size of sets with varying number of discrete elements in them. However in the fields of economic and social statistics, the mole with its embedded unit-multiplier (the very large Avogadro number) is rarely a practical unit of measure, and the name of the associated dimension (i.e. amount of substance) is rarely a good descriptor of the type of statistical population (or more in general 'set of discrete elements') we would like to characterise. Hence the name of the section: measuring the numerosity of sets, and it is meant as a generalisation of measuring the amount of substance.
 
 In an attempt to generalise the measurment of numerosities we revisit the very act of measurement and break it down so that parallels can be found between the common act of measurement over continuous quantities and the size measurement of sets with discrete, finite elements. Recall that, when measuring continuous quantities, we start by defining a standard, then we define ways of comparing the standard to the measured quantity (typically by 'recognising' the standard multiple times in the measured quantity), and finally counting how many times we were able to 'align' the standard with the measured quantity (without overlaps). So when moving from continuous quantities and their measurement to measuring discrete quantities we should construct a unit of measure that:
-- can be well defined as a standard (i.e. is recognisable),
+- can be well defined as a standard (i.e. it is recognisable),
 - the elements of the set can be 'aligned' or 'matched' to that standard
 - and the distinct matches can be counted without overlaps
 
@@ -168,7 +185,7 @@ $$\small (Dimension_1, … , Dimension_n) = {x} (Attribute_1, … , Attribute_k)
 
 The aim is that both the _Measure_ and the _Unit of measure_ emerges as a subset of Dimensions and Attributes, in an unambiguous and complete way. That is, each component (Dimension or Attribute) is either part of the _Measure_ or part of the _Unit of measure_ and the association of the component is consistent throughout a cube. This exercise, though it seems trivial, in practice can cause surprising challenges.
 
-## 3.1. Should units of measure be modelled as dimensions or as attributes?
+## 3.1 Should units of measure be modelled as dimensions or as attributes?
 
 To best answer this question one should ask why would one choose a component to be a dimension or an attribute in a Data Structure Definition in general.
 
@@ -184,7 +201,7 @@ How does this translate for _Units of measure_? As it was pre-empted in the miss
 
 [^5]: Throughout this document we tend to use a language that sometimes shifts between an abstract mathematical language and the concrete language of the SDMX standard. The reader should observe carefully the references to objects (artefacts) described in the information model of the standard (e.g. cubes are roughly equivalent to DSDs, ‘Concepts’ are abstract manifestations of ‘Components’ of a DSD, which themselves can play a role of a ‘Dimension’ or an ‘Attribute’.)
 
-## 3.2. Concepts to consider when assigning units of measure
+## 3.2 Concepts to consider when assigning units of measure
 
 In some statistical domains (e.g., Economy) the units of measure tend to be determined by multiple concepts. For GDP, for example the narrowly defined Unit of measure could be “National currency” or “US Dollar”, but other concepts may also be necessary to uniquely pin down the full unit of measure (and provide an accurate unit of measure label). Price base details may be needed to distinguish between current price or constant price measurement variants of GDP, adjustment may be needed to differentiate seasonally 
 adjusted and non-seasonally adjusted data, base years are needed for indexes, conversion-styles are needed when currencies are translated into each other and so on.
@@ -285,12 +302,12 @@ Sometimes the conversion type is specified in a dedicated dimension, but often, 
 ### Base period and base reference area
 These concepts are important when data has been expressed as a factor of a quantity observable in a specific time period (base period) or in an equivalent quantity in a different geographic or economic reference area (base reference area). There are two equivalent ways to assign a unit of measure when base periods or base reference areas have a role in the data model. When the measure is expressed as a multiple of its value at a given time period, we could either have: Index, 2015 as the ‘full’ unit of measure, but equivalently we could also say that the unit of measure is ‘Percentage of the measured quantity in 2015’. Depending on the audience both approaches can be used, although a consistence across at least a data-warehouse is desirable. For time-reference quantities the former pattern is more common, as it allows for an easy combination of the unit measure and base period (where base periods can be numerous). In the case of base reference areas, the latter pattern is more popular e.g. ‘Percentage of the measured quantity in OECD’, and can be expressed in a compact form only requiring the unit of measure concept.
 
-## 3.3. Coding conventions and a typology of units of measures with examples
+## 3.3 Coding conventions and a typology of units of measures with examples
 In this section we present conventions and recommendations for the narrow unit of measure, as described in the previous section. According to the SDMX Glossary [5], the cross-domain concept for the unit of measure is $\text{\scriptsize UNIT\_MEASURE \ "Unit of measure"}$ which defines the unit in which the data values are expressed. The recommended representation for this concept is the code list  $\text{\scriptsize CL\_UNIT\_MEASURE.}$
 
 In some global Data Structure Definitions (DSDs), the concept $\text{\scriptsize UNIT}$ is used instead of $\text{\scriptsize UNIT\_MEASURE}$ with the code list $\text{\scriptsize CL\_UNIT}$ instead of $\text{\scriptsize CL\_UNIT\_MEASURE}$. When creating structures, it is recommended to align with the SDMX Glossary recommendations.
 
-### 3.3.1. Adding additional information through annotations
+### 3.3.1 Adding additional information through annotations
 To communicate symbols for units of measures, it is important to use the correct symbols, follow the standard conventions, and avoid ambiguity. Since the SDMX technical standard is case insensitive by nature, we are often misaligned when representing the official symbols/codes used by existing standards. For example, the symbol for metre is _m_, not _M_, which stands for mega, a prefix that means million. The symbol for second is _s_, not _sec_, which is an abbreviation, not a symbol. The symbol for kilogram is _kg_, not _Kg_ or _kG_, which are incorrect capitalizations. Some computer systems or programming languages still have the requirement of case insensitivity and some humans who are not familiar with SI units tend to confuse upper and lower case or can not interpret the difference in upper and lower case correctly.
 
 For this reason, the case insensitive symbols are defined. Although the Unified Code for Units of Measure does not encourage use of case insensitive symbols where not absolutely necessary, in some circumstances the case insensitive representation may be the greatest common denominator. Thus, some systems that can handle case sensitivity may end up using case insensitive symbols in order to communicate with less powerful systems.
@@ -302,7 +319,7 @@ Use Case: The official representation of the Unified Code for Units of Measure (
 Annotation Type: UCUM_CS_CODE
 Annotation Title: kg
 ```
-### 3.3.2. Types of units of measure, coding patterns, labelling of UoMs
+### 3.3.2 Types of units of measure, coding patterns, labelling of UoMs
 
 Units of measure can be classified into distinct categories depending on their origin, derivation and intended usage. Here are the most common categories and suggestions of how these could be used and coded.
 
@@ -403,11 +420,13 @@ FCTR_B1GQ: Factor of GDP
 ```
 
 **Other, special units of measure**
+[TODO mention importance of scales and M-layer work, but possibly ]
+
 Special codes like `_X: "Unspecified"` or `_X: "Not allocated"` may be used in some cases as units of measure (particularly in the context of describing ratios quantities with the same unit of measure), but `_Z: "Not applicable"` should be avoided.
 
 A different class of special units of measure is tied to measurements on nominal or ordinal scales. The measurements described above have almost exclusively been done on continuous, interval scales (meaning that addition/subtraction and multiplication/division between measured quantities are meaningful), perhaps the exception of the class of units of measure referred to as  _itemisable_. These latter cannot be regarded as continous scales and hence division does not always yield easily interpretable outcomes, but for most practical use cases they behave well in dimensional analysis. The ordinal and nominal scale measurements however represent a coarser _measurement_ of reality, and they at best only convey order between measurements, but addition and multiplication cannot be used and thus the applicability of dimensional analysis is limited. Examples of such scales are: Pantone scale for color, Likert scales used in questionnaires (1 to 5, or other ordered set of choices measuring intensity), Beaufort scale for wind intensity.
 
-Ultimately some measurements, even though are not stricly speaking related to ordinal scale measurements, may be treated in a special way just because the transformations that were applied to the measurements result in non-linear scales, or capped/bounded scales which limit the further additive multiplicative extensions of the measured quantities. Presenting scale information for such measurements may be more relevant than describing a _standard_. Examples could be: the Richter scale for earthquakes, pH-scale for acidity.    
+Ultimately some measurements, even though are not stricly related to ordinal scale measurements, may be treated in a special way just because the transformations that were applied to the measurements, result in non-linear scales, or capped/bounded scales which limit further additive or multiplicative extensions of the measured quantities. Presenting scale information for such measurements may be more relevant than describing a _unit of measure_. Examples could be: the Richter scale for earthquakes, pH-scale for acidity.    
 
 For these measurements the recommendation is to provide _units of measure_ that describe the scale on which the measurement has occured. These scale descriptors will be incorrect units of measure in the strict sense, nonetheless they will serve the same purpose in guiding the data-user: help understand the limits of comparability with other quantities and the scopes of computation in which these numbers can meaningfully take part. 
 
@@ -421,4 +440,4 @@ SCL_PH: pH scale
 ```
 
 
-Please note that the various codelist categories can have varying degree of volatility, some are fairly static others change often or are strongly context dependent. The static code lists are often associated with reference data from mature frameworks such as scientific unit of measures and currencies. For these static code lists, the SDMX – Statistical Working Group (SWG) will manage and publish the appropriate cross-domain code lists. The more dynamic code lists include categories that frequently change over time, and from one domain to the ohter requiring additions to reflect particularities in statistical data products. Examples of dynamic code lists include derived units of measure, percentages, and factors of. For these dynamic code lists, the management responsibilities will lie with the various business domains, however it is recommended to adopt the coding patterns described in the guidelines to maintain broad convergence.
+Please note that the various codelist categories can have varying degree of volatility, some are fairly static others change often or are strongly context dependent. The static code lists are often associated with reference data from mature frameworks such as scientific unit of measures and currencies. For these static code lists, the SDMX – Statistical Working Group (SWG) will manage and publish the appropriate cross-domain code lists. The more dynamic code lists include categories that frequently change over time, and from one domain to the other require additions to reflect particularities in statistical data products. Examples of dynamic code lists include derived units of measure, percentages, and factors. For these dynamic code lists, the management responsibilities will lie with the various business domains, however it is recommended to adopt the coding patterns described in the guidelines to maintain broad convergence.
