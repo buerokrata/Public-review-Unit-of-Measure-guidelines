@@ -1,8 +1,8 @@
 # Guidelines for modelling Units of measure in SDMX
 
-Version 1.1.draft\
+Version 1.2.draft\
 SWG - Unit of measure task group\
-September 2025
+October 2025
 
 
 
@@ -106,7 +106,7 @@ We still divide debt with reserves, but this time we recognise that the two quan
 
 $$\small \mathrm{reserves} = 4000 \: \mathrm{USD} \Rightarrow {1 \over 4000} \mathrm{reserves} = 1 \: \mathrm{USD} \tag{4}$$
 thus
-$$\small \text{gross debt} = 5000 \: \mathrm{USD} =  5000 {1 \over 4000} \mathrm{reserves} = 125 \: \text{\% of  reserves} \tag{5}$$ 
+$$\small \text{gross debt} = 5000 \: \mathrm{USD} =  5000 {1 \over 4000} \mathrm{reserves} = 125 \: \text{\% of  reserves} \tag{5}$$
 
 In this approach the value of 1.25 (or 125%) is associated with the quantity in the numerator of the indicator in (3), and the quantity represented by the denominator becomes the new standard for value measurement (i.e. the new unit of measure). Notice that, when converting units of measure, it is the measured quantity that becomes the new unit of measure and not its original unit of measure  (It is a recurrent mistake to carry the original unit of measure of the denominator, rather than the denominator itself into the new unit of measure). This highlights, how units of measures are arbitrarily chosen measured quantities, and within the same dimension (i.e., when commensurable) they can be used interchangeably once the proper conversion factors have been applied.
 
@@ -432,24 +432,21 @@ H_WR: Hours per worker
 
 **Percentages**
 
-When defining percentages, it is recommended to be specific (particularly in the context of 'change of units-of-measure' style modelling), that is, instead of "Percentage", use "Percentage of (something)", e.g. Percentage of GDP, Percentage of population, Percentage of labour force etc. Percentages can be even more specific, adding precision of the selected items in them, e.g., Percentage of women aged 15-49 years, Percentage of intermediate consumption in the same product, Percentage of working age population in the same subgroup.
+When defining percentages, it is recommended to be specific (particularly in the context of 'change of units-of-measure' style modelling), that is, instead of "Percentage", use "Percentage of (something)", e.g. Percentage of GDP, Percentage of population, Percentage of labour force etc. Percentages can be even more specific, nonetheless a good balance should be found between precision and contextuality. When shares of a measure are presented along breakdowns, there are three possible approaches: present for each breakdown a specific unit of measure (e.g. Percentage of women aged 15-49 years), or present the unit of measure with a contextual reference (e.g. Percentage of women in the same age-group), or indeed omit entirely the breakdown reference when it is obvious from the context (e.g. Percentage of women). The first option is the best at unlocking the full power of dimensional analysis, but it has the risk of scattering the data in a database (in the sense that few numbers will be immediately comparable), the second option is best when there is ambiguity about the breakdown to be considered as relevant for the unit of measure, whereas the third - least specific - option works best when it is clear from the context or the data model how 'Percentage of women' can be interpreted. 
 
 _Suggested coding pattern_: PT_(code of indicator/measure)_(codes of relevant breakdowns)
 
 _Code examples_:
 ```
 PT_POP: Percentage of population
-PT_POP_AGE: Percentage of population in the same age
-PT_POP_SEX_AGE: Percentage of population in the same sex and age
+PT_POP_AGE: Percentage of population in the same age-group
+PT_POP_SEX_AGE: Percentage of population in the same sex and age-group
 PT_POP_SUB: Percentage of population in the same subgroup
-PT_POP_Y_LT1: Percentage of children aged less than 1 years
-PT_POP_Y_GE15: Percentage of population aged 15 years or over
-PT_POP_Y15T64: Percentage of population aged 15-64 years
 ``` 
-Besides the ‘Percentage of _something_’ pattern it is worth mentioning a few related codes and units of measure. To complement growth rates in time series, or interest rates and yields it is recommended to use ‘Percent per annum’ (PA)or ‘Percent per period’ (PP) as unit of measure. Their close relative ‘Percentage change’ is not recommended as it withholds important information about the applicable timeframe – and it rarely adds to the information in the Measure (or the Transformation dimension). Additionally, ‘Percentage points’ (PD) are often used in contexts where additive manipulations are carried out on quantities already expressed as percentages (e.g. a difference of two interest rates) or a decomposition of a percentage term (e.g. various expenditure component’s contribution to GDP growth).
+Besides the ‘Percentage of _something_’ pattern it is worth mentioning a few related codes and units of measure. To complement growth rates in time series, or interest rates and yields it is recommended to use ‘Percent per annum’ (PA) or ‘Percent per period’ (PP) as unit of measure. Their close relative ‘Percentage change’ is not recommended as it withholds important information about the applicable timeframe – and it rarely adds to the information in the Measure (or the Transformation dimension). Additionally, ‘Percentage points’ (PD) are often used in contexts where additive manipulations are carried out on quantities already expressed as percentages (e.g. a difference of two interest rates) or a decomposition of a percentage term (e.g. various expenditure component’s contribution to GDP growth).
 
 **Factor of …** 
-These units of measure are meant to replace the unitless units of measure like Ratio or Pure number (that are not valid units of measure). This kind of units of measure can be used for ratios when one figure is divided by another, and the result basically shows how many times one figure is greater than another, for example, Factor of GDP. The ‘Factor of …’ pattern is similar to the ‘Percentage of …’ pattern. The only distinction is that for the latter ratios are multiplied by 100.
+These units of measure are meant to replace the unitless units of measure like Ratio or Pure number (that are not valid units of measure). This kind of unit of measure can be used for ratios when one figure is divided by another, and the result basically shows how many times one figure is greater than another, for example, Factor of GDP. The ‘Factor of …’ pattern is similar to the ‘Percentage of …’ pattern. The only distinction is that for the latter ratios are multiplied by 100.
 ```
 Government debt = 1.19 factor of GDP, or,
 Government debt = 119 percent of GDP
