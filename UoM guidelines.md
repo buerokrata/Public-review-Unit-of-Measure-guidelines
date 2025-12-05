@@ -4,8 +4,6 @@ Version 1.2.1-draft\
 SWG - Unit of measure task group\
 November 2025
 
-
-
 # 1. Introduction
 
 The role of units of measure in statistical data modeling is critical for ensuring consistency, accuracy, and interpretability. Measurement units provide a standardized way to quantify data, enabling immediate assessment of comparability and defining the scope for computations.
@@ -53,13 +51,12 @@ While this document does not provide a definitive list of units of measure, it o
 
 The **DRUM** (Digital Representation of Units of Measurement) task group, under the auspices of the Committee on Data (CODATA) of the International Science Council, has the core mandate to promote the FAIR principles (Findable, Accessible, Interoperable, and Reusable) for scientific data by ensuring units of measurement are not "second-class citizens". Its primary goals are to work with international scientific unions to raise awareness and provide guidance on implementing digital unit representations. This includes developing recommendations for machine-actionable encoding of units, creating guidelines for annotating data, and defining best practices.
 
-
-
 ## 2.3 Using dimensional analysis 
 
 In engineering and science - as a part of the mentioned standards [^DA] - dimensional analysis is systematically used to determine units of measures of measured, estimated and derived quantities. Dimensional analysis comprises of the analysis of quantities to identify their dimensions (such as length, mass, and time) and to associate a unit of measure (such as miles or kilometres) with the quantity such that the quantity is expressed as multiples of the unit of measure. Additionally, dimensional analysis sets out the rules to working with quantities in calculations and comparisons.
 
 Dimensional analysis is a convenient tool to build a rigourous system of measurement, and serve as a validation tool for calculations and comparisons. The main rules of dimensional analysis/calculus can be summarised as follows:
+
 - only measured quantities sharing the same units of measure can be directly compared, or added to (subtracted from) each other
 - measured quantities sharing the same base dimension are said to be _commensurable_; their roles as measured quantity vs. unit of measure are interchangeable (e.g. $\small {in=2.54 cm} \Rightarrow {cm=1/2.54 in}$) 
 - multiplication and division is possible between quantities, with the resulting quantity carrying the unit of measure that results from the same operations carried out on the units of measure, using the conventional rules of exponentiation. E.g. when computing a speed change over a period of time, the units of the resulting derived quantity will be: ${m/s \over s} = \small m/s^{2}$
@@ -76,9 +73,10 @@ There are two notable points where the existing standards allow for some interpr
 The examples below demonstrate how dimensional analysis works, and discusses two distinct scenarios of data derivation:  ratios of commensurable quantities and ratios of non-commensurable quantities. 
 
 In the following example we use three measured quantities of an imaginary country:
- - population: 100 _persons_
- - gross debt: 5000 USD
- - reserves: 4000 USD
+
+- population: 100 _persons_
+- gross debt: 5000 USD
+- reserves: 4000 USD
 
 Two of these quantities represent _monetary value_ (with USD as the associated measurement standard) and one represents _numerosity_ (with person as the measurement standard) 
 
@@ -92,7 +90,7 @@ These are all straightforward cases, following from the 3rd bullet-point on dime
 
 However in the case of a 'Debt to reserves ratio', i.e. a scenario in which we calculate ratios of quantities that share the same unit of measure (and hence are commensurable) we have two competing representation options (for the same numerical figure[^1]). 
 
-### 'Unitless number' approach:
+### 2.4.1 'Unitless number' approach:
 
 $$\small \text{Debt to reserves ratio} = {\text{gross debt} \over \text{reserves}} = {\text{5000 USD} \over \text{4000 USD}} = 1.25 \: \mathrm{USD}^{0} \tag{3}$$
 
@@ -100,7 +98,7 @@ In this scenario the value 1.25 is stored for the measure 'Debt to reserves rati
 
 The struggles and workarounds statistical producers take to fill the void created by the ‘disappearing’ unit of measure in the ‘unitless number’ approach is telling. Often the component for the unit of measure in the database is filled by 'meta' instructions about the unit of measure, as some sort of warning: _ratio_, _number_, _pure number_, _unitless number_ are the most frequent, or to escape the problem the value is multiplied by 100 and presented as _percentage_. The problem with these practices is that they are not units of measure, but rather hints for the user of the data to investigate more thoroughly the indicator definition or look-up methodological metadata to have a sense of the context in which the number can be used. In SDMX, using special code-list items like __X: 'Not allocated'_ would be more appropriate than the meta-instructions.
 
-### 'Change of unit-of-measure' approach:
+### 2.4.2 'Change of unit-of-measure' approach:
 
 We still divide debt with reserves, but this time we recognise that the two quantities are commensurable, so the resulting quantity - exactly the same ratio as above - can be interpreted as the quantity in the numerator expressed in multiples of the quantity in the denominator. 
 
@@ -110,7 +108,7 @@ $$\small \text{gross debt} = 5000 \: \mathrm{USD} =  5000 {1 \over 4000} \mathrm
 
 In this approach the value of 1.25 (or 125%) is associated with the quantity in the numerator of the indicator in (3), and the quantity represented by the denominator becomes the new standard for value measurement (i.e. the new unit of measure). Notice that, when converting units of measure, it is the measured quantity that becomes the new unit of measure and not its original unit of measure  (It is a recurrent mistake to carry the original unit of measure of the denominator, rather than the denominator itself into the new unit of measure). This highlights, how units of measures are arbitrarily chosen measured quantities, and within the same dimension (i.e., when commensurable) they can be used interchangeably once the proper conversion factors have been applied.
 
-### Contextuality of units of measure
+### 2.4.3 Contextuality of units of measure
 
 The second representation of the value 1.25 in most contexts is more informative and often analytically more useful than the presentation of a ratio with no unit of measure associated. The 'change of unit-of-measure' approach fixes the problem of the 'missing' unit of measure by maintaining an association between the measured quantity and its original dimension (or quantity kind). In our example it is clear that the number is expessing the size of a _monetary value_, and it represents a multiple of the reserves. 
 
@@ -119,13 +117,13 @@ In certain systems notable quantities emerge as easy to interpret reference quan
 In an ideal world units should not be context dependent, however in practice they often are. The units of the SI-system (its most recent definitions especially) relate to universal constants of nature, and hence they make the units of measure based on those definitions at first glance universal. Nonetheless at closer inspection, even base units like the metre have an implicit context. For example a metre in one inertial reference frame cannot be additively combined or directly compared with a metre from another sufficiently incompatible reference frame.
 
 From a contextuality point of view the unitless number approach yields the least precise, most contextual unit of measure. Assessing the magnitude is entirely left to the context. One has to analyse the quantity kinds involved, the calculation methodology to be able to assess limits of comparability and additivity. A change of unit of measure approach offers the possibility to be more precise, less ambiguous, and delimit better the usage scope of the numbers. Nonetheless several options present themselves to include more or less context in the formulation of the Units of measure. 
-E.g. in the example above we have seen that the unit of measure can be '% of reserves' but could also be '% of reserves of country x' or '% of reserves of country x in year y'. The latter is the least contextual, it best guarantees that no accidental comparisons and additions are made with numbers expressed in different units. 
+E.g. in the example above we have seen that the unit of measure can be '% of reserves' but could also be '% of reserves of country x' or '% of reserves of country x in year y'. The latter is the least contextual, it best guarantees that no accidental comparisons and additions are made with numbers expressed in different units.
 
-### The analysis of three common cases for ratios of commensurable quantities
+### 2.4.4 The analysis of three common cases for ratios of commensurable quantities
 
 We have seen that a good unit of measure leaves little to the context. Nonetheless, when formulating recommendations, this document balances multiple desirable properties of the unit of measure system:
 
-- Activate the dimensional analysis benefits (set bounds of comparability and additivity), this corresponds to low contextuality, or precise and unambiguos formulation 
+- Activate the dimensional analysis benefits (set bounds of comparability and additivity), this corresponds to low contextuality, or precise and unambiguos formulation
 - Be helpful in avoiding metadata lookups
 - Do this without exploding the number of units of measure
 
@@ -141,10 +139,9 @@ The second case of '%' calculations are less obviously tilting towards the chang
 
 The third case _proportions_ in various breakdown group - e.g. proportion of unemployed to the total populaton in various age ranges - is the least obvious. On one hand the 'change of UoM' approach would lead to numerous units of measures of the form '% of youth population', '% of 35 to 44 year population', one unit of measure for each age range in our example. The 'unitless number' approach as usual would only assign '%' to all proportions, not just to the one in the example, but really to all proportions and shares of anything ever calculated. A contextual and imprecise forms of unit of measure, midway between the two approaches could allocate 'percentage of same \<subgroup\>' for proportions. This approach can be useful within a datawarehouse, especially when data is offered in a multitude of breakdowns, but proportions are only calculated with respect to a specific breakdown.  In the example above population data may be available by age and gender, yet proportions of unemployed may be computed only by age in with case a helpful unit of measure would be 'percentage of same age population'. 
 
-
 We believe that the recommendations to articulate the units of measures for percentages a bit more than simply '%' helps reduce the need for metadata lookups, makes it possible to distinguish at least the three distinct cases mentioned above (reference quantities, growth rates, shares/proportions), allows comparability according to dimensional analysis and in the first case it even works for additivity rules (within the implicit context). The patterns here, while not the most economical, still keep the number of variantions in check - although not so much that a prescriptive list of all such units of measures could be provided in advance. A more compressed (%-only) system however would excel at the third requirement, but would require major compromises for the first two requirements.
 
-### Pressure to use inconsistent variations
+### 2.4.5 Pressure to use inconsistent variations
 
 Because of the alternative presentation options for commensurable quantities and the subtle difference these options induce vis-a-vis the unambiguous rule for not commensurable quantities there are precedents and pressures to use inconsistent combinations of measure and units-of-measure. We have observed two types of deviations from a consistent unit of measure use.
 
@@ -154,11 +151,11 @@ For example, the quantity 'GDP to population ratio' which should be associated w
 
 The other compelling case to deviate from a consistent use of units of measure is the opposite of the previous one. In this case the starting point is an indicator computed from commensurable quantities and the 'unitless number' representation for the measure. The choice of 'unitless number' representation is based often on the argument that this is the established convention, this is how users recognise the indicator. Take for example the 'unemployment rate' (literally it is the unemployed to labour force ratio) and in a consistent unit of measure allocation this is presented as _percentage_, however to give context and avoid misinterpretation it can be associated with _percentage of labour force_. This approach, while it seemingly kills two birds with one stone (familiar measure, informative unit of measure) can still cause problem when used in further computation and dimensional analysis is applied literally.
 
-### Recommendations
+### 2.4.6 Recommendations
 
 1. Use consistent representations whenever possible
 2. When calculating indicators of commensurable quantities, prefer the 'change of unit-of-measure' representation
-3. When convention dictates the use of inconsistent representations provide ample, easily accessible metadata and clues for the user to be able to get back in the comfort of dimensional analysis for further derivations, or be able to remain in the 'quasi-consistent' world of the established convention. 
+3. When convention dictates the use of inconsistent representations provide ample, easily accessible metadata and clues for the user to be able to get back in the comfort of dimensional analysis for further derivations, or be able to remain in the 'quasi-consistent' world of the established convention.
 
 [^1]: Indeed the guideline's perspective here is quite unusual and very utilitarian. In a classical approach we know in advance what we measure and the unit of measure follows. Here the numerical value emerges first and we architect the data model around it, and ponder the utility of two distinct combinations of 'measure - unit of measure pairs' that will go with the number, and set scopes of usage for it.
 
@@ -171,6 +168,7 @@ In the example above on dimensional analysis we have already touched upon the is
 The definition of the _mole_ in SI system provides a good analogy for measuring the numerosity of sets, or quantify the size of sets with varying number of discrete elements in them. However in the fields of economic and social statistics, the mole with its embedded unit-multiplier (the very large Avogadro number) is rarely a practical unit of measure, and the name of the associated dimension (i.e. amount of substance) is rarely a good descriptor of the type of statistical population (or more in general 'set of discrete elements') we would like to characterise. Hence the name of the section: measuring the numerosity of sets, and it is meant as a generalisation of measuring the amount of substance, or an alternative way of dealing with 'number of entities' or indeed 'number of events'.
 
 In an attempt to generalise the measurment of numerosities we revisit the very act of measurement and break it down so that parallels can be found between the common act of measurement over continuous quantities and the size measurement of sets with discrete, finite elements. Recall that, when measuring continuous quantities, we start by defining a standard, then we define ways of comparing the standard to the measured quantity (typically by 'recognising' the standard multiple times in the measured quantity), and finally counting how many times we were able to 'align' the standard with the measured quantity (without overlaps). So when moving from continuous quantities and their measurement to measuring discrete quantities we should construct a unit of measure that:
+
 - can be well defined as a standard (i.e. it is recognisable),
 - the elements of the set can be 'aligned' or 'matched' to that standard
 - and the distinct matches can be counted without overlaps
@@ -187,7 +185,7 @@ For example:
 
 $$\small \text{Population of Seborga} = 297 \ persons$$
 
-One outstanding question remains - how should the 'ideal' element of the set be described? When working with practical cases we often come across the problem of the possiblity of assigning the characteristic element of the set in specific or generic terms. In the above case we could have opted to use 'inhabitants', 'persons' or something more generic e.g. 'entities'. They would all be valid units of measure according to the principles laid out above. How would we nonetheless decide which one to choose? Is it the approach of the SI system - to choose a very generic term - the one to follow? Perhaps not, or not in all circumstances. The best unit of measure should help the user of the data to understand the scope of the data, to clearly set out the limits of comparability of the data with similar measures and inform on the range of simple operations that can be immediately performed on the data. 
+One outstanding question remains - how should the 'ideal' element of the set be described? When working with practical cases we often come across the problem of the possiblity of assigning the characteristic element of the set in specific or generic terms. In the above case we could have opted to use 'inhabitants', 'persons' or something more generic e.g. 'entities'. They would all be valid units of measure according to the principles laid out above. How would we nonetheless decide which one to choose? Is it the approach of the SI system - to choose a very generic term - the one to follow? Perhaps not, or not in all circumstances. The best unit of measure should help the user of the data to understand the scope of the data, to clearly set out the limits of comparability of the data with similar measures and inform on the range of simple operations that can be immediately performed on the data.
 
 Let's work further with the above example and analyse the implications of choosing more specific or less specific units of measure.
 
@@ -201,7 +199,8 @@ Using specific units of measure like 'inhabitants' or 'tourists' allows the deve
 
 The approach presented here for the numerosity of sets deviates from the baseline recommendation formulated in the SI-system and the standard frameworks presented in 2.1, nonetheless it is not uprecedented. Even these recommendations tend to acknowledge the need for measuring the 'number of entities', occasionally make way for exceptions, instead of simply calling quantities unitless. E.g. UCUM introduces specific units of measure that derive from the unit '1', e.g. bit or byte (8 bits). Likewise, in various groups of data practitioners we find cases of systematic uses of counting units (_person_ and _enterprise_ in economic and social statistics, _pixel_, _frame_ in image processing, _revolutions per minute_ in physics and engineering, packaging units _packet_, _roll_  in UN/CEFACT recommendations, etc.) For furhter justification and a thorough description of the proposed approach (with the exception of monetary value and currencies) please refer to the David Flater papers [[DF1]](#3) [[DF2]](#4).
 
-### Recommendations
+### 2.5.1 Recommendations
+
 1. When measuring numerosity of sets, use a description of the set as the measured quantity and use a description of the ideal element of the set as the unit of measure.
 2. Of the many options for the 'ideal element' of the set, choose the one that best fits the intended precision and calculation scope. 
 3. When in doubt, contrary to conventions in science and engineering, lean towards more specific units of measure, however as much as possible stay balanced, without and extreme bias towards precision. More precision is great, and it is easier for the end-user to generalise the scope when needed, but it may lead to a proliferation of units of measures, and can lead to a scattering or isolation of the data.
@@ -212,7 +211,7 @@ The approach presented here for the numerosity of sets deviates from the baselin
 
 The concept of a _monetary value_ can be formally defined as a distinct quantity kind, and indeed a new dimension. While this quantity is not one of the base quantities in the SI system, it is essential for fields like economics and social sciences. In association with _monetary value_, currencies such as the Euro or US Dollar function as units of measure, similar to how the metre is a unit for length. Just like for traditional physical units, monetary value can also be expressed in terms of other reference quantities representing a monetary value, such as the value of a certain amount of gold, the economic output of an entire country (GDP), or the valuation of a company.
 
-_Exchange Rates_ are a specific type of derived quantity that represents the ratio of two different currency units. An exchange rate, such as the US Dollar to Euro rate (USD/EUR), allows for the conversion of a monetary value from one currency to another. It can be seen as either a ratio of two currency units or as a single currency unit expressed in terms of another. 
+_Exchange Rates_ are a specific type of derived quantity that represents the ratio of two different currency units. An exchange rate, such as the US Dollar to Euro rate (USD/EUR), allows for the conversion of a monetary value from one currency to another. It can be seen as either a ratio of two currency units or as a single currency unit expressed in terms of another.
 
 The peculiarity of _currencies_ as units of measure and _exchange rates_ as conversion factors among those, is that they are not fixed in time (unlike units of measures within the SI-system). The variability in time for the currencies is due to inflation (as if we defined a rubbery metre rod, that compresses or stretches in time). As inflation and other economic factors affect different currency zones at different rates, the exchange rates themselves change dynamically. Recommendations specific to modelling the inflation effects, or various conversion types are discussed at more length in section 3.2 under the heading _Price base and Conversion type_.
 
@@ -223,7 +222,6 @@ A key distinction in monetary value measurement is the difference between _stock
 Many essential economic quantities are derived by combining monetary value with other physical or abstract quantities. _Prices_ are a prime example; they represent the ratio of a monetary value to a volume, mass, or some other quantity. For instance, the price of gasoline might be expressed as US dollars per liter, or the price of a precious metal might be given in Euros per gram. This type of derived quantity allows for the standardization of value across different items, making it possible to compare the cost of goods and services on a per-unit basis. Another example of a derived quantity is _Cost-Efficiency_, which measures the output or performance of a system relative to the monetary value invested. This can be expressed in various ways, such as miles per US dollar for transportation or a specific performance metric per monetary unit for a business process.
 
 [^3]: To bring a science analogy: this is as if the distance covered by a moving object would be plotted every second. Each individual measurement is a distance (in meters), but it also corresponds to the velocity of the object at that instant (in meters per second) as our measurement frequency exactly corresponds to the unit of measure of time.
-
 
 # 3. Data-warehousing - representation of units of measure through multiple concepts
 
@@ -252,18 +250,19 @@ How does this translate for _Units of measure_? As it was pre-empted in the miss
 [^5]: Throughout this document we tend to use a language that sometimes shifts between an abstract mathematical language and the concrete language of the SDMX standard. The reader should observe carefully the references to objects (artefacts) described in the information model of the standard (e.g. cubes are roughly equivalent to DSDs, ‘Concepts’ are abstract manifestations of ‘Components’ of a DSD, which themselves can play a role of a ‘Dimension’ or an ‘Attribute’.)
 
 
-
 ## 3.2 Concepts to consider when assigning units of measure
 
 In some statistical domains (e.g., Economy) the units of measure tend to be determined by multiple concepts. For GDP, for example the narrowly defined Unit of measure could be “National currency” or “US Dollar”, but other concepts may also be necessary to uniquely pin down the full unit of measure (and provide an accurate unit of measure label). Price base details may be needed to distinguish between current price or constant price measurement variants of GDP, adjustment may be needed to differentiate seasonally 
 adjusted and non-seasonally adjusted data, base years are needed for indexes, conversion-styles are needed when currencies are translated into each other and so on.
 
 If we put all the concepts that are relevant to measurement into a single unit of measure label, the narrowly defined US dollars, may grow into something like:
+
 ```
 US dollars, constant prices, constant PPPs, reference year 2015, millions
 or
 US dollars, current prices, current PPPs, seasonally adjusted
 ```
+
 Moreover, having units of measure with all the possible combinations of the included components in a single dimension, and accordingly represented by a single code-list would be hard to manage. Therefore, the general recommendation is to split the complex units of measure into separate dimensions and attributes in the model whenever possible. Some of the SDMX tools are already capable of assembling composite units of measures from multiple dimensions and attributes. Having said that, if there is a need for editorial control that goes beyond simple concatenation rules – and attribute can always be added to the data-model.
 
 Here is how the above example US dollars, constant prices, constant PPPs, 
@@ -278,14 +277,15 @@ Base period: 2015
 Unit multiplier: Millions
 ```
 
-*Table 1* presents a list of concepts associated with units of measure and their recommended representations. These concepts often have a considerable impact on measurement. Sometimes they literally become part of the unit of measure, other times they just shape the narrowly defined unit of measure.
+_Table 1_ presents a list of concepts associated with units of measure and their recommended representations. These concepts often have a considerable impact on measurement. Sometimes they literally become part of the unit of measure, other times they just shape the narrowly defined unit of measure.
 
 **Table 1**
 Unit measure related concepts and their representation
+
 |Concept ID | Concept name | Concept representation | <div style="min-width:200px"> Concept description</div> | Examples |
 |---|---|---|---|---| 
 | UNIT_MEASURE | Unit of measure | CL_UNIT_MEASURE | Unit in which the data values are expressed. Often this is what we refer to as the narrow unit of measure. | Persons,<br>National currency,<br>Hours per day|
-|CURRENCY| Currency |CL_CURRENCY|Currency, could represent the denomination or the valuation of the measure | Euro,<br> US Dollar | 
+|CURRENCY| Currency |CL_CURRENCY|Currency, could represent the denomination or the valuation of the measure | Euro,<br> US Dollar |
 |UNIT_MULT|Unit multiplier|SDMX:CL_UNIT_MULT(1.1)| A multiplier to calculate the actual value in the narrow unit of measure.| Units,<br>Thousands,<br>Millions|
 |TRANSFORMATION| Transformation| SDMX:CL_TIMETRANS(1.0)| Time-related operation performed on a time series, involving only observations of that time series.|Index,<br>Growth rate| 
 |ADJUSTMENT| Adjustment| SDMX:CL_SEASONAL_ADJUST(1.0)| Procedures to decompose series into trend, cycle, seasonal and outlier components|Seasonally adjusted,<br>Trend|
@@ -295,14 +295,16 @@ Unit measure related concepts and their representation
 |BASE_REF_AREA| Base reference area|CL_AREA| Reference area used as the base of an index number.| EU, OECD,<br>US|
 
 ### (Narrow) Unit of measure
-The UNIT_MEASURE concept in Table 1 is often the only component to describe the full Unit of measure, but when other dimensions or attributes contribute to the full unit of measure, this concept is meant to capture the most important, core part of it and we often refer to it as the ‘narrow’ unit of measure in the data model. The simplest but most frequently used extension is the addition of a Unit multiplier in which case the ‘full’ unit of 
-measure: USD, millions is represented as a combination of two concepts the ‘narrow’ unit of measure: USD and the unit multiplier: millions.
+
+The UNIT_MEASURE concept in _Table 1_ is often the only component to describe the full Unit of measure, but when other dimensions or attributes contribute to the full unit of measure, this concept is meant to capture the most important, core part of it and we often refer to it as the ‘narrow’ unit of measure in the data model. The simplest but most frequently used extension is the addition of a Unit multiplier in which case the ‘full’ unit of measure: 'USD, millions' is represented as a combination of two concepts the ‘narrow’ unit of measure: 'USD' and the unit multiplier: 'millions'.
 
 ### Currency
-Currency codes are often part of the narrow unit of measure code-list, yet there are two well identified modelling use cases when the separate representation of currency (concept and codelist) is needed. 
+
+Currency codes are often part of the narrow unit of measure code-list, yet there are two well identified modelling use cases when the separate representation of currency (concept and codelist) is needed.
+
 1. When currency is used as a denomination currency (and not as a valuation currency)
 it has no impact on the unit of measure
-2. If the currency is used for valuation, there are two distinct data modelling variations. 
+2. If the currency is used for valuation, there are two distinct data modelling variations.
 
 One modelling variant relies on a dedicated currency concept and code-list. It offers a  richer structure and it is particularly useful when the cube contains quantities in both national currency and converted into a single currency to facilitate cross country comparisons. When the data is in national currency, it should be represented such that:
 
@@ -318,11 +320,12 @@ UNIT_MEASURE (dimension/attribute) = ‘USD converted’ and
 CURRENCY (attribute) = USD
 ```
 
-The other modelling variant relies only on the Unit of measure concept to encode currencies, e.g. applicable when the data is only in national currency. The narrow unit of measure is set to a specific currency (note that all currencies are also listed in the CL_UNIT_MEASURE code-list). 
+The other modelling variant relies only on the Unit of measure concept to encode currencies, e.g. applicable when the data is only in national currency. The narrow unit of measure is set to a specific currency (note that all currencies are also listed in the CL_UNIT_MEASURE code-list).
 
 The CL_CURRENCY code list contains the list of existing and former currencies listed in the ISO 4217 standard. For the ‘currency denomination’ use case it may contain references to currency pools (e.g. Major currencies, EU currencies) which are strictly forbidden for units of measures. Therefore, in the design of the Unit measure code-list such currency pools and non-specific currencies should be avoided.
 
 ### Unit multiplier
+
 Unit multipliers are used for readability, and they also double as an implicit 
 measurement precision indicator (i.e., an economic value presented in millions is unlikely to be precise to the cent). In the SDMX code-list for unit multipliers the codes are powers of 10 needed to construct the actual multiplier. When the unit multiplier is 1, it can be omitted.
 
@@ -331,6 +334,7 @@ Some unit multipliers are different. The ‘Greeks’ are often added as variati
 Negative unit multipliers (percent, per thousand, per million), frequent with derived indicators in social statistics, also tend to be directly listed in the unit of measure code-list rather than composed from the dedicated unit multiplier code-list. This choice is mostly motivated by the readability issues observed when concatenating the narrow unit of measure with negative unit multipliers (e.g., concatenated: ‘per birth, per thousand’ vs. direct: ‘per thousand births’ ). 
 
 ### Transformation
+
 Using a transformation dimension in a data model is challenging, especially for the proper unit of measure allocation. The problem is that some transformations alter the measure as well as the unit of measure, and hence cannot be simply associated fully with one or the other. An index calculation (simple rebasing) does not change the measured quantity (e.g. a monetary value stays a monetary value, just measured differently), whereas growth rate calculation produces a whole new quantity – to take a science analogy an index calculation is similar to changing the way a distance is measured, whereas a growth rate over time is similar to a calculation of a distance over time, i.e. a measurement of speed.
 
 The transformation dimension helps to connect nicely a key measured quantity and its transformations, but the resulting data-models are typically more difficult to interpret. If the measures are altered to capture the differences in nature between the original data and their transformations (the easy slicing or pivotability of the data model disappears). 
@@ -340,9 +344,11 @@ Additionally, there is the dilemma how to assign units of measures to measures: 
 In general, especially when designing cubes for dissemination to wider audiences avoid the transformation dimension. If a transformation dimension is included nonetheless, represent the post-transformation unit of measure in the UNIT_MEASURE concept (i.e. index for indexes or indeed ‘percent of base period value’, and ‘percent per annum’ for a growth rate calculated over a year).
 
 ### Adjustment
+
 This is typically used for a special class of transformations that emerge as part of seasonal adjustment process. Time-series, when looked at as combinations of cycles of varying length, are composed of an underlying trend (fluctuations of 10 year and above), a cycle (fluctuations between 2 to 10 years, definitions vary), seasonal variations (less than one year) and outliers of various shapes (level shifts, transitory changes, spikes). The seasonally adjusted variant of a quantity can be interpreted as a different measured quantity, but, as it is often the case, it could be also interpreted as the same measured quantity but measured with a measurement standard that changes in time to compensate for seasonal variations that obscure underlying twists and turns. As a result of the latter interpretation, seasonal adjustment is often presented as part of the unit of measure (e.g. USD, seasonally adjusted).
 
 ### Price base and Conversion type
+
 Both _Price base_ and _Conversion type_ are similar in nature to seasonal adjustment, but their impact on the ‘metre rod’ is more straightforward to justify. When measuring value across time, we realise that the unit of value in one period of time has potentially a different value in another period of time – it does not reflect the same value anymore. Typically, if all prices of all things valuable doubled overnight, then the pre-doubling currency unit would represent twice the value than the post-doubling currency unit, inflation eroded the value of the currency unit as compared to other valuables.
 
 Therefore, in macroeconomic studies comparisons are often made with a unit of measure that is corrected for the impact of time. Such time correction can be made for example by asserting the value that would be observed if prices did not change (only quantities). For example ‘constant price USD’ measures the changes in value, after correcting for across the board price changes.
@@ -352,25 +358,30 @@ The conversion type is used when comparisons are made spatially, and specificall
 Sometimes the conversion type is specified in a dedicated dimension, but often, the data space is compact enough to introduce the conversion type variants, for the few reference currencies (USD and EUR) in the ‘narrow’ unit of measure code-list. 
 
 ### Base period and base reference area
+
 These concepts are important when data has been expressed as a factor of a quantity observable in a specific time period (base period) or in an equivalent quantity in a different geographic or economic reference area (base reference area). There are two equivalent ways to assign a unit of measure when base periods or base reference areas have a role in the data model. When the measure is expressed as a multiple of its value at a given time period, we could either have: Index, 2015 as the ‘full’ unit of measure, but equivalently we could also say that the unit of measure is ‘Percentage of the measured quantity in 2015’. Depending on the audience both approaches can be used, although a consistence across at least a data-warehouse is desirable. For time-reference quantities the former pattern is more common, as it allows for an easy combination of the unit measure and base period (where base periods can be numerous). In the case of base reference areas, the latter pattern is more popular e.g. ‘Percentage of the measured quantity in OECD’, and can be expressed in a compact form only requiring the unit of measure concept.
 
 ## 3.3 Coding conventions and a typology of units of measures with examples
+
 In this section we present conventions and recommendations for the narrow unit of measure, as described in the previous section. According to the SDMX Glossary [[G]](#7), the cross-domain concept for the unit of measure is `UNIT_MEASURE "Unit of measure"`  which defines the unit in which the data values are expressed. The recommended representation for this concept is the code list  `CL_UNIT_MEASURE`.
 
 In some global Data Structure Definitions (DSDs), the concept `UNIT` is used instead of `UNIT_MEASURE` with the code list `CL_UNIT` instead of `CL_UNIT_MEASURE`. When creating structures, it is recommended to align with the SDMX Glossary recommendations.
 
 ### 3.3.1 Adding additional information through annotations
+
 To communicate symbols for units of measures, it is important to use the correct symbols, follow the standard conventions, and avoid ambiguity. Since the SDMX technical standard is case insensitive by nature, we are often misaligned when representing the official symbols/codes used by existing standards. For example, the symbol for metre is _m_, not _M_, which stands for mega, a prefix that means million. The symbol for second is _s_, not _sec_, which is an abbreviation, not a symbol. The symbol for kilogram is _kg_, not _Kg_ or _kG_, which are incorrect capitalizations. Some computer systems or programming languages still have the requirement of case insensitivity and some humans who are not familiar with SI units tend to confuse upper and lower case or can not interpret the difference in upper and lower case correctly.
 
 For this reason, the case insensitive symbols are defined. Although the Unified Code for Units of Measure does not encourage use of case insensitive symbols where not absolutely necessary, in some circumstances the case insensitive representation may be the greatest common denominator. Thus, some systems that can handle case sensitivity may end up using case insensitive symbols in order to communicate with less powerful systems.
 
 To avoid ambiguity, it is also important to use “Code item” annotations to add alternative representation of symbols. As an example, we should add an annotation to reference the official UCUM, the SI-reference point and many of the popular unit of measure ontologies. When referring to kilograms, we could have the code id set to “KG” within our Units of Measure codelist. Since the official UCUM representation is “kg”, we should add the following annotation to the “Code item”.
+
 ```
 Where to attach: Code item
 Use Case: The official representation of the Unified Code for Units of Measure (UCUM).
 Annotation Type: UCUM_CS_CODE
 Annotation Title: kg
 ```
+
 ### 3.3.2 Types of units of measure, coding patterns, labelling of UoMs
 
 Units of measure can be classified into distinct categories depending on their origin, derivation and intended usage. Here are the most common categories and suggestions of how these could be used and coded.
@@ -381,6 +392,7 @@ These are the units of measure coming from standards like SI, ISO/IEC 80000, UCU
 _Suggested coding pattern_: use agreed scientific codes (e.g. H for Hours, KG for kilograms). In order not to introduce additional concepts in the models, these codes can use prefixes (milli, micro, kilo, mega etc).
 
 _Code examples_:
+
 ```
 H: Hours
 HA: Hectares
@@ -396,6 +408,7 @@ These are the units of measure that can be used to count the items in discrete q
 _Suggested coding pattern_: use 2-4 character shortened codes, remove vowels, make sure that there is no duplication with ISO currency codes.
 
 _Code examples_:
+
 ```
 PAT: Patients
 PR: Permits
@@ -415,6 +428,7 @@ The list of currencies is based on the ISO 4217 standard. It includes currently 
 _Suggested coding pattern_: in the case of national currencies, the first two letters of the alpha code are the two letters of the ISO 3166-1 alpha-2 country code and the third is usually the initial of the currency's main unit. XDC for national currency.
 
 _Code examples_:
+
 ```
 TRY: Turkish lira
 TTD: Trinidad and Tobago dollar
@@ -431,6 +445,7 @@ These are the units of measure that are usually formed as a result of combining 
 _Suggested coding pattern_: use the same scientific/itemisable/currency codes and “\_” as a separator.
 
 _Code examples_:
+
 ```
 H_D: Hours per day
 H_PS: Hours per person
@@ -440,47 +455,51 @@ H_WR: Hours per worker
 ```
 
 **Percentages**
-
 When defining percentages, it is recommended to be specific (particularly in the context of 'change of units-of-measure' style modelling), that is, instead of "Percentage", use "Percentage of (something)", e.g. Percentage of GDP, Percentage of population, Percentage of labour force etc. Percentages can be even more specific, nonetheless a good balance should be found between precision and contextuality. When shares of a measure are presented along breakdowns, there are three possible approaches: present for each breakdown a specific unit of measure (e.g. Percentage of women aged 15-49 years), or present the unit of measure with a contextual reference (e.g. Percentage of women in the same age-group), or indeed omit entirely the breakdown reference when it is obvious from the context (e.g. Percentage of women). The first option is the best at unlocking the full power of dimensional analysis, but it has the risk of scattering the data in a database (in the sense that few numbers will be immediately comparable), the second option is best when there is ambiguity about the breakdown to be considered as relevant for the unit of measure, whereas the third - least specific - option works best when it is clear from the context or the data model how 'Percentage of women' can be interpreted. 
 
 _Suggested coding pattern_: PT_(code of indicator/measure)_(codes of relevant breakdowns)
 
 _Code examples_:
+
 ```
 PT_POP: Percentage of population
 PT_POP_AGE: Percentage of population in the same age-group
 PT_POP_SEX_AGE: Percentage of population in the same sex and age-group
 PT_POP_SUB: Percentage of population in the same subgroup
 ``` 
+
 Besides the ‘Percentage of _something_’ pattern it is worth mentioning a few related codes and units of measure. To complement growth rates in time series, or interest rates and yields it is recommended to use ‘Percent per annum’ (PA) or ‘Percent per period’ (PP) as unit of measure. Their close relative ‘Percentage change’ is not recommended as it withholds important information about the applicable timeframe – and it rarely adds to the information in the Measure (or the Transformation dimension). Additionally, ‘Percentage points’ (PD) are often used in contexts where additive manipulations are carried out on quantities already expressed as percentages (e.g. a difference of two interest rates) or a decomposition of a percentage term (e.g. various expenditure component’s contribution to GDP growth).
 
 **Factor of …** 
 These units of measure are meant to replace the unitless units of measure like Ratio or Pure number (that are not valid units of measure). This kind of unit of measure can be used for ratios when one figure is divided by another, and the result basically shows how many times one figure is greater than another, for example, Factor of GDP. The ‘Factor of …’ pattern is similar to the ‘Percentage of …’ pattern. The only distinction is that for the latter ratios are multiplied by 100.
+
 ```
 Government debt = 1.19 factor of GDP, or,
 Government debt = 119 percent of GDP
 ```
+
 _Suggested coding pattern_: FCTR_(code of indicator/measure)_(codes of relevant breakdowns)
 
 _Code examples_:
+
 ```
 FCTR_D1: Factor of decile 1
 FCTR_B1GQ: Factor of GDP
 ```
 
 **Other, special units of measure**
-
 Special codes like `_X: "Unspecified"` or `_X: "Not allocated"` may be used in some cases as units of measure (particularly in the context of describing ratios quantities with the same unit of measure), but `_Z: "Not applicable"` should be avoided.
 
 A different class of special units of measure is tied to measurements on nominal or ordinal scales. The measurements described above have almost exclusively been done on continuous, interval scales (meaning that addition/subtraction and multiplication/division between measured quantities are meaningful), perhaps the exception of the class of units of measure referred to as  _itemisable_. These latter cannot be regarded as continous scales and hence division does not always yield easily interpretable outcomes, but for most practical use cases they behave well in dimensional analysis. The ordinal and nominal scale measurements however represent a coarser _measurement_ of reality, and they at best only convey order between measurements, but addition and multiplication cannot be used and thus the applicability of dimensional analysis is limited. Examples of such scales are: Pantone scale for color, Likert scales used in questionnaires (1 to 5, or other ordered set of choices measuring intensity), Beaufort scale for wind intensity.
 
 Ultimately some measurements, even though are not stricly related to ordinal scale measurements, may be treated in a special way just because the transformations that were applied to the measurements, result in non-linear scales, or capped/bounded scales which limit further additive or multiplicative extensions of the measured quantities. Presenting scale information for such measurements may be more relevant than describing a _unit of measure_. Examples could be: the Richter scale for earthquakes, pH-scale for acidity.    
 
-For these measurements the recommendation is to provide _units of measure_ that describe the scale on which the measurement has occured. These scale descriptors will be incorrect units of measure in the strict sense, nonetheless they will serve the same purpose in guiding the data-user: help understand the limits of comparability with other quantities and the scopes of computation in which these numbers can meaningfully take part. 
+For these measurements the recommendation is to provide _units of measure_ that describe the scale on which the measurement has occured. These scale descriptors will be incorrect units of measure in the strict sense, nonetheless they will serve the same purpose in guiding the data-user: help understand the limits of comparability with other quantities and the scopes of computation in which these numbers can meaningfully take part.
 
 _Suggested coding pattern_: SCL_(scale bounds or common abbreviation)
 
 _Code examples_:
+
 ```
 SCL_1T5: 1-5 scale
 SCL_0T100: 0-100 scale
